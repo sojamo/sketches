@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Sketches</title>
+
+    <!-- Meta information, for machines to read, SEO -->
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <link rel="stylesheet" type="text/css" href="./css/default.css" />
+    <link rel="stylesheet" type="text/css" href="./css/styles.css" />
+
+    <script type="text/javascript">
+
+        function fetchDataFor(theKey) {
+
+            const list = './sketches/list.json';
+
+            fetch(list)
+                .then((res) => res.json())
+                .then((data) => {
+                    const result = data.sketches[theKey] || undefined;
+                    if (result !== undefined) {
+                        const destination = `./sketches/${result.label}/index.html`;
+                        window.location.href = destination;
+                    } else {
+                        console.log("not found")
+                    }
+                })
+                .catch((error) => {
+                    console.log(`Error Fetching data : ${error}`)
+                    document.getElementById('error').innerHTML = 'Error Loading Data'
+                })
+        }
+
+        
+        window.onload = function () {
+            // via https://chrisdevcode.hashnode.dev/how-to-display-json-data-on-an-html-page-using-vanilla-javascript
+            const querySketch = new Array();
+            if (querySketch.length == 0) {
+                if (window.location.search.split('?').length > 1) {
+                    var params = window.location.search.split('?')[1].split('&');
+                    for (var i = 0; i < params.length; i++) {
+                        var key = params[i].split('=')[0];
+                        var value = decodeURIComponent(params[i].split('=')[1]);
+                        querySketch[key] = value;
+                    }
+                }
+            }
+            fetchDataFor(querySketch.v);
+        };
+        
+
+    </script>
+</head>
+
+<body>
+    <p id="error"></p>
+</body>
+
+</html>
